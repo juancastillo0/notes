@@ -48,7 +48,7 @@ const modifyCanvas = (state, action) => {
   switch (action.type) {
     case INITIALIZE_CANVAS: {
       const canvas = action.canvas;
-      
+       
       if (state !== null) { //import
         const paper = canvas.paper;
         state.paths.forEach(dataPath => {
