@@ -1,0 +1,106 @@
+:root{
+  --main-bg-color: rgb(233, 239, 240);
+  --secondary-color: rgb(223, 220, 220);
+  --primary-color: white;
+  --font-color: #212529;
+  --anchor-color: rgb(15, 72, 179);
+}
+
+#main-navbar {
+  background-color: var(--primary-color);
+}
+a.navbar-brand {
+  margin-right: 25px;
+  color: inherit;
+}
+body {
+  font-family: 'Roboto Mono', monospace;
+  background-color: var(--primary-color);
+}
+table.table {
+  color: var(--font-color);
+}
+
+#custom-message{
+  position: fixed;
+  bottom: -200px;
+  right: 25px;
+  transition: 0.2s;
+}
+
+#helper {
+  text-align: center;
+}
+#ecuation {
+  text-align: center;
+  font-size: 25px;
+  min-height: 60px;
+}
+#import-button #import-file-input {
+  display: none;
+}
+#import-button label[for="import-file-input"] {
+  margin: 0;
+}
+#buttons {
+  margin: 10px;
+}
+
+/* Don't display draw button on start, the draw tool is already selected */
+#draw-button {
+  display: none; 
+}
+#canvas-scroll {
+  width: 100%;
+  overflow: scroll;
+  touch-action: none;
+  border: 1px solid var(--secondary-color);
+  border-radius: 10px 0 0 0;
+}
+#canvas {
+  height: 700px;
+  background-color: var(--primary-color);
+}
+
+.canvas-menu {
+  position: absolute;
+  padding: 5px;
+  border: 1px solid var(--secondary-color);
+  border-radius: 10px;
+  background-color: var(--primary-color);
+  display: none;
+  z-index: 2;
+  font-size: 10px;
+}
+.canvas-menu button {
+  background-color: var(--primary-color);
+  border: 0;
+}
+.canvas-menu button img {
+  width: 35px;
+}
+.canvas-menu button svg {
+  width: 35px;
+  height: 35px;
+  fill: var(--font-color);
+}
+
+#to-canvas {
+  text-align: center;
+  width: 100%;
+  display: block;
+  padding: 5px;
+  margin: 10px 0;
+}
+@media (min-width: 992px) {
+  #to-canvas {
+    display: none;
+  }
+  #to-table {
+    display: none;
+  }
+}
+
+.grid-stack-item-content {
+  background-color: azure;
+}
