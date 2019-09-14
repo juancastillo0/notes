@@ -5,8 +5,10 @@ import {changeCanvas, createCanvas} from "../services/store";
 function FilesList(props) {
   const changeCanvas = event => {
     const index = parseInt(event.target.name);
-    console.log(index);
     props.changeCanvas(index);
+    if (props.closeOnSelect){
+      props.closeOnSelect();
+    }
   };
 
 
@@ -32,7 +34,7 @@ function FilesList(props) {
       <button
             type="button"
             className="list-group-item list-group-item-action" 
-            onClick={()=>props.createCanvas()}
+            onClick={props.createCanvas}
           >
             Crear
           </button>

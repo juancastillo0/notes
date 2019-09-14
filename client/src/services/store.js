@@ -4,6 +4,20 @@ import { combineReducers } from "redux";
 import thunk from "redux-thunk";
 import { itemBushFromPath } from "../utils/utils-canvas";
 import { cursors } from "../utils/utils-canvas";
+import { getWindowSize } from "../utils/ResizeHandler";
+
+const CHANGE_WINDOW_SIZE = "CHANGE_WINDOW_SIZE";
+export function changeWindowSize(size) {
+  return { type: CHANGE_WINDOW_SIZE, size };
+}
+const windowSize = (state = getWindowSize(), action) => {
+  switch (action.type) {
+    case CHANGE_WINDOW_SIZE:
+      return action.size;
+    default:
+      return state;
+  }
+};
 
 const IMPORT_CANVAS = "IMPORT_CANVAS";
 export function importCanvas(data) {
@@ -48,13 +62,15 @@ const modifyCanvas = (state, action) => {
   switch (action.type) {
     case INITIALIZE_CANVAS: {
       const canvas = action.canvas;
-       
-      if (state !== null) { //import
+
+      if (state !== null) {
+        //import
         const paper = canvas.paper;
         state.paths.forEach(dataPath => {
           const { x, y, t } = dataPath;
           const path = new paper.Path();
           path.strokeColor = "black";
+          path.strokeWidth = 1.5;
           for (let i = 0; i < x.length; i++) {
             path.add(new paper.Point(x[i], y[i]));
           }
@@ -71,7 +87,7 @@ const modifyCanvas = (state, action) => {
         currentTool: action.tool
       };
     case ADD_PATH: {
-      _addPath(state, action.path, action.save);
+      _addPath(state, action.path, action.pathSave);
       return state;
     }
     case PASTE_PATH: {
@@ -106,7 +122,7 @@ export function changeCanvas(canvas) {
   return { type: CHANGE_CANVAS, canvas };
 }
 export function createCanvas() {
-  return { type: CREATE_CANVAS};
+  return { type: CREATE_CANVAS };
 }
 
 const canvasData = (
@@ -168,6 +184,7 @@ const isUsingPen = (state = false, action) => {
 };
 
 const reducer = combineReducers({
+  windowSize,
   isUsingPen,
   canvasData
 });

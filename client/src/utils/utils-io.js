@@ -79,7 +79,9 @@ export function writeData(data, paper, addPath) {
 }
 
 
-export function downloadCanvasToClient(canvas){
+export function exportData(){
+  const canvasData = store.getState().canvasData;
+  const canvas = canvasData.allCanvas[canvasData.currentCanvas];
   const data = {paths:[], images:[], texts:[], meta:{}};
 
   canvas.bush.all().forEach(bushItem => {

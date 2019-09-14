@@ -79,10 +79,15 @@ class Canvas extends React.Component {
   componentDidUpdate() {
     if (this.props.canvas === null || this.props.canvas.import) {
       this.createPaperScope();
-    } else if (this.props.canvas.canvas !== this.canvasScroll.current.firstChild) {
-      this.canvasScroll.current.removeChild(
-        this.canvasScroll.current.firstChild
-      );
+    } else if (
+      this.props.canvas.canvas !== this.canvasScroll.current.firstChild
+    ) {
+      if (this.canvasScroll.current.firstChild) {
+        this.canvasScroll.current.removeChild(
+          this.canvasScroll.current.firstChild
+        );
+      }
+
       this.canvas = this.props.canvas.canvas;
       this.canvasScroll.current.appendChild(this.canvas);
     }
@@ -90,6 +95,11 @@ class Canvas extends React.Component {
   componentDidMount() {
     if (this.props.canvas === null || this.props.canvas.import) {
       this.createPaperScope();
+    } else if (
+      this.props.canvas.canvas !== this.canvasScroll.current.firstChild
+    ) {
+      this.canvas = this.props.canvas.canvas;
+      this.canvasScroll.current.appendChild(this.canvas);
     }
     //document.addEventListener("paste", handlePasteImage);
   }
@@ -99,7 +109,6 @@ class Canvas extends React.Component {
 
   pointerHandler = event => {
     if (event.pointerType === "pen") {
-      //const canvasScroll = this.canvasScroll.current;
       const canvas = this.canvas;
       const penHandlers = this.props.canvas.getPenHandlers(event.nativeEvent);
       const penTool = this.props.canvas.tools["draw"];

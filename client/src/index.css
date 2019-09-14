@@ -14,7 +14,7 @@ a.navbar-brand {
   color: inherit;
 }
 body {
-  font-family: 'Roboto Mono', monospace;
+  /*font-family: 'Roboto Mono', monospace;*/
   background-color: var(--primary-color);
 }
 table.table {

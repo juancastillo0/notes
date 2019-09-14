@@ -1,17 +1,25 @@
 import React from "react";
 import Navbar from "./components/Navbar";
-import "bootstrap/dist/css/bootstrap.min.css";
+
 import Main from "./main/main";
+import Login from "./login/login";
+import Register from "./login/register";
 import store from "./services/store";
 import { Provider } from "react-redux";
+import { BrowserRouter, Route } from "react-router-dom";
+import ResizeHandler from "./utils/ResizeHandler";
 
 function App() {
   return (
     <Provider store={store}>
-      <div className="App">
-        <Navbar />
-        <Main />
-      </div>
+      <ResizeHandler>
+        <BrowserRouter>
+          <Navbar />
+          <Route path="/" exact component={Main} />
+          <Route path="/login" exact component={Login} />
+          <Route path="/register" exact component={Register} />
+        </BrowserRouter>
+      </ResizeHandler>
     </Provider>
   );
 }
