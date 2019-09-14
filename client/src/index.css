@@ -57,7 +57,7 @@ table.table {
   border: 1px solid var(--secondary-color);
   border-radius: 10px 0 0 0;
 }
-#canvas {
+.canvas {
   height: 700px;
   background-color: var(--primary-color);
 }

@@ -3,8 +3,8 @@ import React from "react";
 export default function NavBar() {
   return (
     <nav className="navbar navbar-expand-md sticky-top" id="main-navbar">
-      <a className="navbar-brand" href="#">
-        Hoja
+      <a className="navbar-brand" href="#root">
+        Paps
       </a>
 
       <ul className="navbar-nav mr-auto">
@@ -17,7 +17,7 @@ export default function NavBar() {
       <ul className="navbar-nav ml-auto">
         <li className="nav-item">
           <a className="nav-link" href="/">
-            Home
+            Login
           </a>
         </li>
       </ul>

@@ -34,11 +34,16 @@ class Canvas extends React.Component {
   }
   createPaperScope = () => {
     const canvasScroll = this.canvasScroll.current;
-    const canvas = this.canvas.current;
-    const scope = new paper.PaperScope();
-    console.log(this.canvas.current, this.canvasMenu);
+    // const canvas = this.canvas.current;
+    const canvas = document.createElement("canvas");
+    canvas.className = "canvas";
+    this.canvas = canvas;
+    canvasScroll.appendChild(canvas);
 
-    scope.setup(this.canvas.current);
+    const scope = new paper.PaperScope();
+
+    scope.setup(this.canvas);
+    scope.activate();
     const bush = new rbush();
     const { hideMenu, showMenu } = getCanvasFunctions({
       canvasMenu: this.canvasMenu
@@ -70,9 +75,16 @@ class Canvas extends React.Component {
       currentTool: "draw"
     });
   };
+
   componentDidUpdate() {
-    if (this.props.canvas.import){
+    if (this.props.canvas === null || this.props.canvas.import) {
       this.createPaperScope();
+    } else if (this.props.canvas.canvas !== this.canvasScroll.current.firstChild) {
+      this.canvasScroll.current.removeChild(
+        this.canvasScroll.current.firstChild
+      );
+      this.canvas = this.props.canvas.canvas;
+      this.canvasScroll.current.appendChild(this.canvas);
     }
   }
   componentDidMount() {
@@ -88,9 +100,8 @@ class Canvas extends React.Component {
   pointerHandler = event => {
     if (event.pointerType === "pen") {
       //const canvasScroll = this.canvasScroll.current;
-      const canvas = this.canvas.current;
-
-      const penHandlers = this.props.canvas.getPenHandlers(event);
+      const canvas = this.canvas;
+      const penHandlers = this.props.canvas.getPenHandlers(event.nativeEvent);
       const penTool = this.props.canvas.tools["draw"];
       penTool.onMouseDown = () => {};
       penTool.onMouseDrag = penHandlers.onMouseDrag;
@@ -121,19 +132,17 @@ class Canvas extends React.Component {
         />
         <CanvasMenu
           hideMenu={this.state.hideMenu}
-          canvas={this.canvas.current}
+          canvas={this.canvas}
           canvasMenuRef={this.setCanvasMenuRef}
         />
-        <div id="canvas-scroll" ref={this.canvasScroll}>
-          <canvas
-            id="canvas"
-            ref={this.canvas}
-            onPointerDown={
-              !this.props.isUsingPen ? this.pointerHandler : undefined
-            }
-            style={{ cursor }}
-          />
-        </div>
+        <div
+          id="canvas-scroll"
+          ref={this.canvasScroll}
+          style={{ cursor }}
+          onPointerDown={
+            !this.props.isUsingPen ? this.pointerHandler : undefined
+          }
+        ></div>
       </React.Fragment>
     );
   }

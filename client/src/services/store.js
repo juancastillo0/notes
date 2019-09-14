@@ -105,6 +105,10 @@ const CHANGE_CANVAS = "CHANGE_CANVAS";
 export function changeCanvas(canvas) {
   return { type: CHANGE_CANVAS, canvas };
 }
+export function createCanvas() {
+  return { type: CREATE_CANVAS};
+}
+
 const canvasData = (
   state = { currentCanvas: 0, allCanvas: [null] },
   action
@@ -122,7 +126,7 @@ const canvasData = (
         allCanvas: [...state.allCanvas, action.data]
       };
     case CHANGE_CANVAS:
-      action.canvas.paper.activate();
+      state.allCanvas[action.canvas].paper.activate();
       return {
         ...state,
         currentCanvas: action.canvas
