@@ -6,11 +6,11 @@ Application that lets you write and save notes in a clean interface
  
  
  ### Technologies 
- This proyect uses React for the interface, Redux to manage state, paperjs for the canvas, passportjs and bcrypt for authentication and rbush for the canvas data structure. For styling and layout it uses [Bootstrap](https://getbootstrap.com/), styled-components, and the icons are from [Material.io](https://material.io/resources/icons/) and icons8.
+ This proyect uses React for the interface, Redux to manage state, paperjs for the canvas, passportjs and bcrypt for authentication and rbush for the canvas data structure. For styling and layout it uses [Bootstrap](https://getbootstrap.com/), styled-components, and the icons are from [Material.io](https://material.io/resources/icons/) and icons8. It also uses mongodb and express.
  
  
  ### Prerequisites
- To run the repository locally you need to run npm install in the two main folders server and client. After that yo can run npm run dev in the server folder, this command will run both, the server and the client.
+ The project uses mongodb, and the database should be running on localhost with port 27017. To run the repository locally you need to run npm install in the two main folders server and client. After that, you can execute the command "run npm dev" inside the server folder, this command will run both, the server, on port 5000, and the client, on port 3000, at the same time.
  
  
  ### Author
