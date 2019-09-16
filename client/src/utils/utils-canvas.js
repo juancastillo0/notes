@@ -20,17 +20,17 @@ export function itemBushFromPath(path) {
 export function getCanvasFunctions({ canvasMenu }) {
   let canShowMenu;
   /** Canvas menu shown on click*/
-  function showMenu(x, y) {
+  function showMenu(event) {
     if (!canShowMenu) return;
-    console.log(x, y)
+    const {pageX:x, pageY:y} = event;
     canvasMenu.style.display = "block";
     const box = canvasMenu.getBoundingClientRect();
     canvasMenu.style.left = `${Math.min(
-      Math.max(x - box.width / 2, 20),
-      window.innerWidth - box.width - 50
+      Math.max(x - box.width / 2, 25),
+      window.innerWidth - box.width - 40
     )}px`;
     canvasMenu.style.top = `${Math.min(
-      Math.max(y - box.height * 3, 20),
+      Math.max(y - box.height * 2, 20),
       window.innerHeight - box.height - 50
     )}px`;
   }

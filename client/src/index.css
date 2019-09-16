@@ -42,6 +42,10 @@ table.table {
 #import-button label[for="import-file-input"] {
   margin: 0;
 }
+#import-button label[for="import-file-input"]:hover {
+  cursor: pointer;
+}
+
 #buttons {
   margin: 10px;
 }
@@ -52,37 +56,16 @@ table.table {
 }
 #canvas-scroll {
   width: 100%;
+  height: 100%;
   overflow: scroll;
   touch-action: none;
   border: 1px solid var(--secondary-color);
   border-radius: 10px 0 0 0;
 }
 .canvas {
-  height: 700px;
+  height: 3000px;
+  width: 3000px;
   background-color: var(--primary-color);
-}
-
-.canvas-menu {
-  position: absolute;
-  padding: 5px;
-  border: 1px solid var(--secondary-color);
-  border-radius: 10px;
-  background-color: var(--primary-color);
-  display: none;
-  z-index: 2;
-  font-size: 10px;
-}
-.canvas-menu button {
-  background-color: var(--primary-color);
-  border: 0;
-}
-.canvas-menu button img {
-  width: 35px;
-}
-.canvas-menu button svg {
-  width: 35px;
-  height: 35px;
-  fill: var(--font-color);
 }
 
 #to-canvas {

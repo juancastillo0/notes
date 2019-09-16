@@ -78,18 +78,23 @@ export function writeData(data, paper, addPath) {
   });
 }
 
-
-export function exportData(){
-  const canvasData = store.getState().canvasData;
-  const canvas = canvasData.allCanvas[canvasData.currentCanvas];
-  const data = {paths:[], images:[], texts:[], meta:{}};
+export function stringifyCanvas(canvas){
+  const data = {paths:[], images:[], texts:[], meta:{name:canvas.name}};
 
   canvas.bush.all().forEach(bushItem => {
     const {path, minX, minY, maxX, maxY } = bushItem;
     data.paths.push({x:path.data.x, y:path.data.y, t:path.data.t, box:[minX, minY, maxX, maxY]});
   });
 
-  downloadToClient(JSON.stringify(data), "notes-export.json", "application/json");
+  return JSON.stringify(data);
+}
+
+export function exportData(){
+  const canvasData = store.getState().canvasData;
+  const canvas = canvasData.allCanvas[canvasData.currentCanvas];
+  const data = stringifyCanvas(canvas);
+
+  downloadToClient(data, "notes-export.json", "application/json");
 }
 
 /** Download data to client */

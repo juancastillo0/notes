@@ -1,11 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
+import CanvasMenu from "./CanvasMenu";
 
 class CanvasHelpers extends React.Component {
   render() {
     return (
-      <div id="buttons">
-        {this.props.children}
+      <div  className="d-flex justify-content-between pb-2">
+        {this.props.children ? this.props.children:<div/>}
+        <CanvasMenu showAlways={true}/>
       </div>
     );
   }

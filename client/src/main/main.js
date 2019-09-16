@@ -19,17 +19,44 @@ class Main extends React.Component {
     const openFileList = this.state.openFileList;
     const isSmall = this.props.windowSize.device <= 0;
 
+    let toggleConfig;
+    if (openFileList) {
+      toggleConfig = {
+        title: "Cerrar archivos",
+        label: "Cerrar ",
+        icon: "chevron_left",
+        margin: "ml-auto"
+      };
+    } else {
+      toggleConfig = {
+        title: "Abrir archivos",
+        label: "Abrir ",
+        icon: "chevron_right",
+        margin: "mr-auto"
+      };
+    }
+
     const toggleFileListButton = (
-      <button onClick={this.toggleFileList} title={openFileList?"Cerrar archivos":"Abrir archivos"}>
-        close
+      <button
+        className={"d-flex btn align-items-center " + toggleConfig.margin}
+        onClick={this.toggleFileList}
+        title={toggleConfig.title}
+        style={{ fontWeight: "bolder", fontSize: "1.1em", paddingRight: 2 }}
+      >
+        <span style={{ marginBottom: 4 }}> {toggleConfig.label}</span>
+        <i className="material-icons">{toggleConfig.icon}</i>
       </button>
     );
-    
+
     return (
       <div className="container-fluid">
         <div className="row">
           {openFileList && (
-            <div className={isSmall ? "col" : "col-xl-2 col-lg-3 col-sm-4 p-0"}>
+            <div
+              className={
+                isSmall ? "col" : "col-xl-2 col-lg-3 col-sm-4 p-0 mt-2"
+              }
+            >
               {toggleFileListButton}
               <FilesList
                 closeOnSelect={isSmall ? this.toggleFileList : undefined}
@@ -37,16 +64,15 @@ class Main extends React.Component {
             </div>
           )}
 
-          <div className={openFileList ? "col-xl-10 col-lg-9 col-sm-8" : "col"}>
+          <div
+            className={openFileList ? "col-xl-10 col-lg-9 col-sm-8" : "col"}
+            style={isSmall && openFileList ? { display: "none" } : undefined}
+          >
             <CanvasHelpers>
               {!openFileList && toggleFileListButton}
             </CanvasHelpers>
 
-            <div
-              style={isSmall && openFileList ? { display: "none" } : undefined}
-            >
-              <Canvas />
-            </div>
+            <Canvas rerender={isSmall && openFileList}/>
           </div>
         </div>
       </div>

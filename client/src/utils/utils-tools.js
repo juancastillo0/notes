@@ -40,6 +40,7 @@ export function getAllTools({
       return false;
     }
     function cloneSelectedPaths() {
+      document.addEventListener("paste", handlePaste);
       if (copiedRect !== undefined) {
         copiedRect.remove();
       }
@@ -111,6 +112,7 @@ export function getAllTools({
       selectedPaths.forEach(p => {
         removePath(p);
       });
+      rect.remove();
       event.preventDefault();
     }
     function handleCopy(event) {
@@ -147,6 +149,10 @@ export function getAllTools({
           state = "moving";
           return;
         }
+      }
+      if (selectedPaths.length > 0) {
+        document.removeEventListener("copy", handleCopy);
+        document.removeEventListener("cut", handleCut);
       }
       rect.remove();
 
@@ -227,7 +233,7 @@ export function getAllTools({
                 new paper.Point(maxX, maxY)
               );
             } else {
-              showMenu(event.event.pageX, event.event.pageY);
+              showMenu(event.event, event.event);
             }
           } else {
             selectedPaths = bush.search({
@@ -254,6 +260,9 @@ export function getAllTools({
           if (selectedPaths.length == 0) {
             rect.remove();
             rect = new paper.Path.Rectangle(from, from);
+          } else {
+            document.addEventListener("copy", handleCopy);
+            document.addEventListener("cut", handleCut);
           }
           break;
         }
@@ -290,9 +299,7 @@ export function getAllTools({
       }
       canvas.style.cursor = cursors["select"];
     }
-    document.addEventListener("copy", handleCopy);
-    document.addEventListener("cut", handleCut);
-    document.addEventListener("paste", handlePaste);
+
     return { onMouseDown, onMouseDrag, onMouseUp, onMouseMove };
   }
   /** Initialize select tool */
@@ -330,7 +337,7 @@ export function getAllTools({
     }
     function onMouseUp(event) {
       if (path.length <= 3) {
-        showMenu(event.event.pageX, event.event.pageY);
+        showMenu(event.event, event.event);
       }
     }
     return { onMouseDown, onMouseDrag, onMouseUp };
@@ -356,7 +363,7 @@ export function getAllTools({
       });
       path.add(event.point);
       pathSave = {
-        time: [new Date().getTime()],
+        t: [new Date().getTime()],
         x: [event.point.x],
         y: [event.point.y]
       };
@@ -364,7 +371,7 @@ export function getAllTools({
     }
     function onMouseDrag(event) {
       path.add(event.point);
-      pathSave["time"].push(new Date().getTime());
+      pathSave["t"].push(new Date().getTime());
       pathSave["x"].push(event.point.x);
       pathSave["y"].push(event.point.y);
     }
@@ -373,7 +380,7 @@ export function getAllTools({
         addPath(path, pathSave);
       } else {
         path.remove();
-        showMenu(event.event.pageX, event.event.pageY);
+        showMenu(event.event, event.event);
       }
     }
     return { onMouseDown, onMouseDrag, onMouseUp };
@@ -389,7 +396,7 @@ export function getAllTools({
 
   /** Drag canvas with move tool */
   function updateScrollPosition(click, event) {
-    canvasScroll.scrollTo(click[0] - event.pageX, click[1] - event.pageY);
+    canvasScroll().scrollTo(click[0] - event.pageX, click[1] - event.pageY);
   }
   /** Move tool configuration */
   function MoveMouseHandlers() {
@@ -398,8 +405,8 @@ export function getAllTools({
 
     const onMouseDownMove = function(event) {
       click = [
-        event.pageX + canvasScroll.scrollLeft,
-        event.pageY + canvasScroll.scrollTop
+        event.pageX + canvasScroll().scrollLeft,
+        event.pageY + canvasScroll().scrollTop
       ];
       hideMenu();
     };
@@ -411,7 +418,7 @@ export function getAllTools({
     };
     const onMouseUpMove = function(event) {
       if (!isDragging) {
-        showMenu(event.pageX, event.pageY);
+        showMenu(event, event);
       }
       click = false;
       isDragging = false;
@@ -428,17 +435,17 @@ export function getAllTools({
 
   /** Add move tool event listeners */
   function addMoveHandlers() {
+    const _canvasScroll = document.getElementById("canvas-scroll");
     Object.entries(moveHandlers).forEach(([eventType, handler]) => {
-      canvasScroll.addEventListener(eventType, handler);
+      _canvasScroll.addEventListener(eventType, handler);
     });
-    canvasScroll.style.touchAction = "auto";
   }
   /** Remove move tool event listeners */
   function removeMoveHandlers() {
+    const _canvasScroll = document.getElementById("canvas-scroll");
     Object.entries(moveHandlers).forEach(([eventType, handler]) => {
-      canvasScroll.removeEventListener(eventType, handler);
+      _canvasScroll.removeEventListener(eventType, handler);
     });
-    canvasScroll.style.touchAction = "none";
   }
 
   /** Initialize move tool */
@@ -456,7 +463,6 @@ export function getAllTools({
     let handlers;
     const dummyTool = new paper.Tool();
     dummyTool.onActivate = () => {
-      canvasScroll.style.touchAction = "auto";
       canvas.addEventListener("pointerdown", onPointerDown);
     };
     dummyTool.onDeactivate = () => {
@@ -514,5 +520,5 @@ export function getAllTools({
     return { onPointerDown, onMouseDrag, onMouseUp, onMouseMove };
   }
 
-  return { tools, getPenHandlers };
+  return { tools, getPenHandlers, addMoveHandlers, removeMoveHandlers };
 }

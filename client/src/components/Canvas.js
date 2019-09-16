@@ -14,6 +14,7 @@ import {
 import { connect } from "react-redux";
 import { getAllTools } from "../utils/utils-tools";
 import { getCanvasFunctions, cursors } from "../utils/utils-canvas";
+import { setTouchAction } from "../services/actions";
 import CanvasMenu from "./CanvasMenu";
 import paper from "paper";
 import rbush from "rbush";
@@ -51,11 +52,13 @@ class Canvas extends React.Component {
     this.setState({ hideMenu });
     const { tools, getPenHandlers } = getAllTools({
       canvas,
-      canvasScroll,
+      canvasScroll: () => document.getElementById("canvas-scroll"),
       paper: scope,
       addPath: this.props.addPath,
       removePath: this.props.removePath,
       pastePath: this.props.pastePath,
+      setTouchAction: action =>
+        (document.getElementById("canvas-scroll").style.touchAction = action),
       hideMenu,
       showMenu,
       bush,
@@ -64,7 +67,6 @@ class Canvas extends React.Component {
     });
 
     this.props.initializeCanvas({
-      canvasScroll,
       canvas,
       paper: scope,
       bush,
@@ -72,12 +74,21 @@ class Canvas extends React.Component {
       getPenHandlers,
       savedPaths: {},
       removedPaths: {},
-      currentTool: "draw"
+      currentTool: "draw",
+      name: "Nuevo Archivo",
+      touchAction: "none",
+      ...(this.props.canvas !== null && !this.props.canvas.import
+        ? this.props.canvas
+        : {})
     });
   };
 
-  componentDidUpdate() {
-    if (this.props.canvas === null || this.props.canvas.import) {
+  initialize = () => {
+    if (
+      this.props.canvas === null ||
+      this.props.canvas.canvas === undefined ||
+      this.props.canvas.import
+    ) {
       this.createPaperScope();
     } else if (
       this.props.canvas.canvas !== this.canvasScroll.current.firstChild
@@ -91,15 +102,16 @@ class Canvas extends React.Component {
       this.canvas = this.props.canvas.canvas;
       this.canvasScroll.current.appendChild(this.canvas);
     }
+  };
+  componentDidUpdate() {
+    this.initialize();
   }
   componentDidMount() {
-    if (this.props.canvas === null || this.props.canvas.import) {
-      this.createPaperScope();
-    } else if (
-      this.props.canvas.canvas !== this.canvasScroll.current.firstChild
-    ) {
-      this.canvas = this.props.canvas.canvas;
-      this.canvasScroll.current.appendChild(this.canvas);
+    this.initialize();
+    if (this.props.canvas && this.props.canvas.currentTool) {
+      if (this.props.canvas.currentTool == "move") {
+        this.props.canvas.tools["move"].activate();
+      }
     }
     //document.addEventListener("paste", handlePasteImage);
   }
@@ -131,6 +143,18 @@ class Canvas extends React.Component {
     const cursor = this.props.canvas
       ? cursors[this.props.canvas.currentTool]
       : "";
+    const touchAction =
+      this.props.canvas &&
+      (this.props.canvas.currentTool === "move" || this.props.isUsingPen)
+        ? "auto"
+        : "none";
+    
+    const maxHeight = this.canvasScroll.current
+      ? Math.min(window.innerHeight -
+        this.canvasScroll.current.getBoundingClientRect().top -
+        15, window.innerHeight - 130)
+      : window.innerHeight - 130;
+
     return (
       <React.Fragment>
         <img
@@ -147,7 +171,11 @@ class Canvas extends React.Component {
         <div
           id="canvas-scroll"
           ref={this.canvasScroll}
-          style={{ cursor }}
+          style={{
+            cursor,
+            touchAction,
+            maxHeight
+          }}
           onPointerDown={
             !this.props.isUsingPen ? this.pointerHandler : undefined
           }
@@ -160,6 +188,7 @@ class Canvas extends React.Component {
 const mapStateToProps = state => {
   const canvasData = state.canvasData;
   return {
+    windowSize: state.windowSize,
     isUsingPen: state.isUsingPen,
     canvas: canvasData.allCanvas[canvasData.currentCanvas]
   };
@@ -167,7 +196,14 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { setIsUsingPen, initializeCanvas, addPath, removePath, pastePath }
+  {
+    setIsUsingPen,
+    initializeCanvas,
+    addPath,
+    removePath,
+    pastePath,
+    setTouchAction
+  }
 )(Canvas);
 
 /*onDragOver={handleDragOver} onDrop={handleDropFile} onPointerDown={!this.props.usingPen && this.pointerHandler}*/
