@@ -5,6 +5,7 @@ const expressSession = require("express-session");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
 
+//Sergio Naranjo: Podría utilizar Mongo Atlas para el deploy
 const url = "mongodb://localhost:27017";
 let client;
 
