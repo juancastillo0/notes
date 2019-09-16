@@ -3,6 +3,9 @@ const router = express.Router();
 const utils = require("../utils");
 const ObjectId = require("mongodb").ObjectId;
 
+//Sergio Naranjo: Sería bueno agregar más funcinalidades al canvas
+// Tal vez algo como agregar un texto, imagen o algo parecido.
+
 router.post("/canvas", utils.ensureAuthenticated, (req, res) => {
   const canvas = req.body;
   canvas.user = req.user._id;
